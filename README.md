@@ -45,7 +45,7 @@ public class Pet {
 
 private Workflow<Pet, String> workflow;
 
-	AbstractDecisionNode<Pet, String> doesItHaveFourLegsDecisionNode = new AbstractDecisionNode<Pet, String>("doesItHaveFourLegsDecisionNode") {
+AbstractDecisionNode<Pet, String> doesItHaveFourLegsDecisionNode = new AbstractDecisionNode<Pet, String>("doesItHaveFourLegsDecisionNode") {
 	@Override
 	protected boolean makeDecision(WorkflowContext<Pet, String> context) {
 		return context.getInputObject().hasFourLegs;
