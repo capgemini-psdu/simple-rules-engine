@@ -20,7 +20,26 @@ public class WorkflowContext<I, O> {
 	private O outputObject;
 	
 	/** A prefix for any logging. For example may be some sort of business or thread identifier. */
-	private String loggingPrefix = ""; 
+	private String loggingPrefix = ""; 	
+
+	public WorkflowContext(I inputObject, O outputObject, String loggingPrefix) {
+		this.inputObject = inputObject;
+		this.outputObject = outputObject;
+		this.loggingPrefix = loggingPrefix;
+	}
+
+	public WorkflowContext(I inputObject, String loggingPrefix) {
+		this.inputObject = inputObject;
+		this.loggingPrefix = loggingPrefix;
+	}
+
+	public WorkflowContext(I inputObject, O outputObject) {
+		this.inputObject = inputObject;
+		this.outputObject = outputObject;
+	}
+
+	public WorkflowContext() {
+	}
 
 	public I getInputObject() {
 		return inputObject;

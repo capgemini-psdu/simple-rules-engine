@@ -71,39 +71,24 @@ public class WorkflowIntegrationTest {
 	
 	@Test
 	public void testCat() {		
-		WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>();
-		Pet pet = new Pet();
-		pet.hasFourLegs = true;
-		pet.mansBestFriend = false;
-		context.setInputObject(pet);
-		context.setOutputObject(new String()); // Often you might eagerly initialise this rather than rely on the workflow to do it for you
-		context.setLoggingPrefix("CorrelationId: testCat");
+		Pet pet = new Pet(true, false);
+		WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>().setInputObject(pet);
 		workflow.execute(context);
 		assertEquals("Cat", context.getOutputObject());
 	}
 	
 	@Test
 	public void testDog() {		
-		WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>();
-		Pet pet = new Pet();
-		pet.hasFourLegs = true;
-		pet.mansBestFriend = true;
-		context.setInputObject(pet);
-		context.setOutputObject(null); // Often you might eagerly initialise this rather than rely on the workflow to do it for you
-		context.setLoggingPrefix("CorrelationId: testDog");
+		Pet pet = new Pet(true, true);
+		WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>().setInputObject(pet);
 		workflow.execute(context);
 		assertEquals("Dog", context.getOutputObject());
 	}
 	
 	@Test
 	public void testGoldfish() {		
-		WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>();
-		Pet pet = new Pet();
-		pet.hasFourLegs = false;
-		pet.mansBestFriend = false;
-		context.setInputObject(pet);
-		context.setOutputObject(null); // Often you might eagerly initialise this rather than rely on the workflow to do it for you
-		context.setLoggingPrefix("CorrelationId: testGoldfish");
+		Pet pet = new Pet(false, false);
+		WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>().setInputObject(pet);
 		workflow.execute(context);
 		assertEquals("Goldfish", context.getOutputObject());
 	}
@@ -111,5 +96,9 @@ public class WorkflowIntegrationTest {
 	public class Pet {
 		public boolean hasFourLegs;
 		public boolean mansBestFriend;
+		public Pet(boolean hasFourLegs, boolean mansBestFriend){
+			this.hasFourLegs = hasFourLegs;
+			this.mansBestFriend = mansBestFriend;
+		}
 	}
 }
