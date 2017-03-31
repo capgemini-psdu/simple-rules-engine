@@ -34,73 +34,72 @@ Alternatively a specialist DI library such as Spring or Guice may be preferred.
 The following is a simple example to identify a pet by its characteristics. This also demonstrates the programming overhead that this rules engine introduces over and above standard OO or functional models for very simple business rules such as this.
 
 ```
-	public class Pet {
-		public boolean hasFourLegs;
-		public boolean mansBestFriend;
-		public Pet(boolean hasFourLegs, boolean mansBestFriend){
-			this.hasFourLegs = hasFourLegs;
-			this.mansBestFriend = mansBestFriend;
-		}
+public class Pet {
+	public boolean hasFourLegs;
+	public boolean mansBestFriend;
+	public Pet(boolean hasFourLegs, boolean mansBestFriend){
+		this.hasFourLegs = hasFourLegs;
+		this.mansBestFriend = mansBestFriend;
 	}
-	
-	private Workflow<Pet, String> workflow;
+}
+
+private Workflow<Pet, String> workflow;
 
 	AbstractDecisionNode<Pet, String> doesItHaveFourLegsDecisionNode = new AbstractDecisionNode<Pet, String>("doesItHaveFourLegsDecisionNode") {
-		@Override
-		protected boolean makeDecision(WorkflowContext<Pet, String> context) {
-			return context.getInputObject().hasFourLegs;
-		}
-	};
+	@Override
+	protected boolean makeDecision(WorkflowContext<Pet, String> context) {
+		return context.getInputObject().hasFourLegs;
+	}
+};
 	
-	AbstractDecisionNode<Pet, String> isThisMansBestFriendDecisionNode = new AbstractDecisionNode<Pet, String>("isThisMansBestFriendDecisionNode") {
-		@Override
-		protected boolean makeDecision(WorkflowContext<Pet, String> context) {
-			return context.getInputObject().mansBestFriend;
-		}
-	}; 
+AbstractDecisionNode<Pet, String> isThisMansBestFriendDecisionNode = new AbstractDecisionNode<Pet, String>("isThisMansBestFriendDecisionNode") {
+	@Override
+	protected boolean makeDecision(WorkflowContext<Pet, String> context) {
+		return context.getInputObject().mansBestFriend;
+	}
+}; 
 	
-	AbstractProcessingNode<Pet, String> catProcessNode = new AbstractProcessingNode<Pet, String>("catProcessNode") {
-		@Override
-		protected void performAction(WorkflowContext<Pet, String> context) {
-			context.setOutputObject("Cat");
-		}			
-	};
+AbstractProcessingNode<Pet, String> catProcessNode = new AbstractProcessingNode<Pet, String>("catProcessNode") {
+	@Override
+	protected void performAction(WorkflowContext<Pet, String> context) {
+		context.setOutputObject("Cat");
+	}			
+};
 	
-	AbstractProcessingNode<Pet, String> dogProcessNode = new AbstractProcessingNode<Pet, String>("dogProcessNode") {
-		@Override
-		protected void performAction(WorkflowContext<Pet, String> context) {	
-			context.setOutputObject("Dog");		
-		}			
-	};
+AbstractProcessingNode<Pet, String> dogProcessNode = new AbstractProcessingNode<Pet, String>("dogProcessNode") {
+	@Override
+	protected void performAction(WorkflowContext<Pet, String> context) {	
+		context.setOutputObject("Dog");		
+	}			
+};
 	
-	AbstractProcessingNode<Pet, String> goldfishProcessNode = new AbstractProcessingNode<Pet, String>("goldfishProcessNode") {
-		@Override
-		protected void performAction(WorkflowContext<Pet, String> context) {	
-			context.setOutputObject("Goldfish");		
-		}			
-	};
+AbstractProcessingNode<Pet, String> goldfishProcessNode = new AbstractProcessingNode<Pet, String>("goldfishProcessNode") {
+	@Override
+	protected void performAction(WorkflowContext<Pet, String> context) {	
+		context.setOutputObject("Goldfish");		
+	}			
+};
 	
-	FinalNode<Pet, String> finalNode = new FinalNode<Pet, String>();
+FinalNode<Pet, String> finalNode = new FinalNode<Pet, String>();
 	
-	doesItHaveFourLegsDecisionNode.setSuccessNode(isThisMansBestFriendDecisionNode);
-	doesItHaveFourLegsDecisionNode.setFailureNode(goldfishProcessNode);
+doesItHaveFourLegsDecisionNode.setSuccessNode(isThisMansBestFriendDecisionNode);
+doesItHaveFourLegsDecisionNode.setFailureNode(goldfishProcessNode);
 	
-	isThisMansBestFriendDecisionNode.setSuccessNode(dogProcessNode);
-	isThisMansBestFriendDecisionNode.setFailureNode(catProcessNode);
+isThisMansBestFriendDecisionNode.setSuccessNode(dogProcessNode);
+isThisMansBestFriendDecisionNode.setFailureNode(catProcessNode);
 	
+goldfishProcessNode.setNextNode(finalNode);
+dogProcessNode.setNextNode(finalNode);
+catProcessNode.setNextNode(finalNode);
 	
-	goldfishProcessNode.setNextNode(finalNode);
-	dogProcessNode.setNextNode(finalNode);
-	catProcessNode.setNextNode(finalNode);
-	
-	workflow = new Workflow<Pet, String>("PetIdentifierWorkflow", doesItHaveFourLegsDecisionNode);
-	WorkflowContext<Pet, String> context;
+workflow = new Workflow<Pet, String>("PetIdentifierWorkflow", doesItHaveFourLegsDecisionNode);
+WorkflowContext<Pet, String> context;
 
-	// Test Cat		
-	Pet pet = new Pet(true, false); // Has four legs but is not man's best friend
-	WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>().setInputObject(pet);
-	workflow.execute(context);
-	assertEquals("Cat", context.getOutputObject());
+// Test Cat		
+Pet pet = new Pet(true, false); // Has four legs but is not man's best friend
+WorkflowContext<Pet, String> context = new WorkflowContext<Pet, String>().setInputObject(pet);
+workflow.execute(context);
+assertEquals("Cat", context.getOutputObject());
 ```
 
 ### More examples
